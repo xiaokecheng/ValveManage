@@ -15,6 +15,7 @@
 
 <script>
 $('#login-button').click(function (event) {
+
 	event.preventDefault();
 	var errormess = document.getElementById("error-mess");
 	errormess.style.display = "";                           <!--  改变显示属性,使其显示 -->  
@@ -39,7 +40,7 @@ $('#login-button').click(function (event) {
 		<div class="container">
 			<h1>Welcome</h1>
 			
-			<form class="form" method="post" action="login_handle.php">
+			<form class="form" method="post" action="login_handle.php">  
 				<div class="login" >
 				<input id="yonghu" type="text" placeholder="用户名" name="username" >
 				<input id="mima" type="password" placeholder="密码" name = "password">

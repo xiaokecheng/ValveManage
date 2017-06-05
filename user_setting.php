@@ -1,8 +1,23 @@
+<?php 
+    session_start();
+	require_once('connect.php');
+	$username = $_SESSION['username'];
+	$userid = $_SESSION['userid'];
+	
+	$sql = "SELECT * FROM user WHERE userid='$userid'";
+	$query = mysqli_query($con,$sql);
+	$row = mysqli_fetch_assoc($query);
+	
+	$telephone = $row['telephone'];
+	$email = $row['email'];
+	
+	$userid_format = str_pad($userid, 6,'0',STR_PAD_LEFT);
+?>
 <!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>暖气水阀监控系统</title>
+<title>用户设置</title>
 
 <link rel="icon" href="images\myicon.ico" />
 <link rel="shortcut icon" href="images\myicon.ico" />
@@ -48,7 +63,7 @@
 	<div class="navigation">
 		<ul>
 		 	<li>欢迎您！</li>
-			<li><a href="">成肖科</a></li>
+			<li><a href="user_setting.php"><?php echo $username?></a></li>
 			
 			<li><a href="">退出</a></li>
 		</ul>
@@ -92,10 +107,10 @@
 	   	
 	   	 <div class="account-box main-mod" style="margin-bottom: 30px;">
 	   	 	<h2 style="font-weight:bold;">账户信息</h2>
-	   	 	<p style="padding-top: 20px;">注册账号：xxxxxxxxx</p>
-	   	 	<p>账号ID：xxxxxxxxx</p>
-	   	 	<p>电话：xxxxxxxxxxx</p>
-	   	 	<p>主管理员姓名：chengxiaoke</p>
+	   	 	<p style="padding-top: 20px;">注册账号：<?php echo $email?></p>
+	   	 	<p>账号ID：<?php echo $userid_format?></p>
+	   	 	<p>电话：<?php echo $telephone?></p>
+	   	 	<p>主管理员姓名：<?php echo $username?></p>
 	   	 </div>
 	   	 <div class="safe-info">
 	   	 	<h2 style="font-weight:bold;">账户管理</h2>

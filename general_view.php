@@ -1,3 +1,20 @@
+<?php 
+    session_start();
+//	if (!isset($_SESSION['username'])){
+	    $fromurl="login.php";            //跳转往这个地址。
+	    if( $_SERVER['HTTP_REFERER'] == "" )
+	    {
+	        header("Location:".$fromurl); exit;
+	    }
+	//}
+	
+	$username = $_SESSION['username'];
+	require_once('connect.php');
+	$sql = "select * from article order by createdatetime desc";   
+	
+	$query = mysqli_query($con,$sql);
+	
+?>
 <!DOCTYPE>
 <html>
 <head>
@@ -7,7 +24,7 @@
     	描述：信息概览
     -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>暖气水阀监控系统</title>
+<title>系统总览</title>
 
 <link rel="icon" href="images\myicon.ico" />
 <link rel="shortcut icon" href="images\myicon.ico" />
@@ -279,7 +296,7 @@ strong{
 	<div class="navigation">
 		<ul>
 		 	<li>欢迎您！</li>
-			<li><a href="">成肖科</a></li>
+			<li><a href="user_setting.php"><?php echo $username?></a></li>
 			
 			<li><a href="">退出</a></li>
 		</ul>

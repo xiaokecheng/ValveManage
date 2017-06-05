@@ -1,3 +1,12 @@
+<?php 
+    session_start();
+	require_once('connect.php');
+	$username = $_SESSION['username'];
+	$sql = "select * from article order by createdatetime desc";   
+	
+	$query = mysqli_query($con,$sql);
+	
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8,7 +17,7 @@
 	描述：温度监控
 -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>智能供暖系统</title>
+<title>阀门控制</title>
 <link rel="icon" href="images\myicon.ico" />
 <link rel="shortcut icon" href="images\myicon.ico" />
 
@@ -40,7 +49,7 @@ $(function() {
 	<div class="navigation">
 		<ul>
 		 	<li>欢迎您！</li>
-			<li><a href="">成肖科</a></li>
+			<li><a href="user_setting.php"><?php echo $username?></a></li>
 			
 			<li><a href="">退出</a></li>
 		</ul>

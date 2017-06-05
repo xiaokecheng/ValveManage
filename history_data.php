@@ -1,3 +1,12 @@
+<?php 
+    session_start();
+	require_once('connect.php');
+	$username = $_SESSION['username'];
+	$sql = "select * from article order by createdatetime desc";   
+	
+	$query = mysqli_query($con,$sql);
+	
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +14,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
 <title>历史数据</title>
+
+<link rel="icon" href="images\myicon.ico" />
+<link rel="shortcut icon" href="images\myicon.ico" />
+
 <link type="text/css" rel="stylesheet" href="css/style.css" />
 <link rel="stylesheet" href="/css/amazeui.css" />
 
@@ -31,7 +44,7 @@
 			<div class="navigation">
 			<ul>
 		 	<li>欢迎您！</li>
-			<li><a href="">成肖科</a></li>
+			<li><a href="user_setting.php"><?php echo $username?></a></li>
 			
 			<li><a href="">退出</a></li>
 			</ul>
