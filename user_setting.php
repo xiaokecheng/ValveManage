@@ -92,9 +92,9 @@
 	   	
 	   	 <div class="account-box main-mod" style="margin-bottom: 30px;">
 	   	 	<h2 style="font-weight:bold;">账户信息</h2>
-	   	 	<p style="padding-top: 20px;">注册账号：552478482</p>
-	   	 	<p>账号ID：552478482</p>
-	   	 	<p>电话：15840076098</p>
+	   	 	<p style="padding-top: 20px;">注册账号：xxxxxxxxx</p>
+	   	 	<p>账号ID：xxxxxxxxx</p>
+	   	 	<p>电话：xxxxxxxxxxx</p>
 	   	 	<p>主管理员姓名：chengxiaoke</p>
 	   	 </div>
 	   	 <div class="safe-info">
