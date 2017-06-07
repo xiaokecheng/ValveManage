@@ -1,17 +1,22 @@
-<?php 
-    session_start();
-	require_once('connect.php');
-	$username = $_SESSION['username'];
-	$userid = $_SESSION['userid'];
+<?php
+	session_start ();
+	if(!isset($_SESSION ["username"]) ||  !isset($_SESSION ["userid"]))
+	{
+		echo "<script>window.location.href='login.php';</script>";
+	}
 	
+	require_once ('connect.php');
+	$username = $_SESSION ['username'];
+	$userid = $_SESSION ['userid'];
+
 	$sql = "SELECT * FROM user WHERE userid='$userid'";
-	$query = mysqli_query($con,$sql);
-	$row = mysqli_fetch_assoc($query);
-	
-	$telephone = $row['telephone'];
-	$email = $row['email'];
-	
-	$userid_format = str_pad($userid, 6,'0',STR_PAD_LEFT);
+	$query = mysqli_query ( $con, $sql );
+	$row = mysqli_fetch_assoc ( $query );
+
+	$telephone = $row ['telephone'];
+	$email = $row ['email'];
+
+	$userid_format = str_pad ( $userid, 6, '0', STR_PAD_LEFT );
 ?>
 <!DOCTYPE>
 <html>
@@ -27,17 +32,17 @@
 <script type="text/javascript" src="js/menu.js"></script>
 
 <style>
-.main-mod p{
+.main-mod p {
 	font-size: 14px;
 	padding-bottom: 20px;
 	padding-left: 10px;
 }
 
-.revisepass-but{
+.revisepass-but {
 	margin-left: 10px;
 	margin-top: 20px;
 	height: 40px;
-	font-size: 14px ;
+	font-size: 14px;
 	padding: 10px;
 	color: #0088CC;
 	cursor: pointer;
@@ -48,7 +53,7 @@
 	border-bottom: 1px solid rgb(215, 215, 215);
 }
 
-.revise-password{
+.revise-password {
 	padding-bottom: 80px;
 	border-bottom: 1px solid rgb(215, 215, 215);
 }
@@ -57,78 +62,94 @@
 </head>
 
 <body>
-<div class="top"></div>
-<div id="header">
-	<div class="logo">无线智能暖气水阀用户系统</div>
-	<div class="navigation">
-		<ul>
-		 	<li>欢迎您！</li>
-			<li><a href="user_setting.php"><?php echo $username?></a></li>
-			
-			<li><a href="">退出</a></li>
-		</ul>
-	</div>
-</div>
+	<div class="top"></div>
+	<div id="header">
+		<div class="logo">无线智能暖气水阀用户系统</div>
+		<div class="navigation">
+			<ul>
+				<li>欢迎您！</li>
+				<li><a href="user_setting.php"><?php echo $username?></a></li>
 
-<div id="content">
-	<div class="left_menu">
-	  <ul id="nav_dot">
-       <li>
-          <h4 class="M1" ><span></span><a href="general_view.php">用户总览</a></h4>
-        </li>
-        
-        <li>
-          <h4 class="M2"><span></span><a href="temperature_monitor.php">温度监控</a></h4>
-        </li>
-        
-        <li>
-          <h4 class="M3"><span></span><a href="valve_control.php">阀门管理</a></h4>
-        </li>
-        
-		<li>
-          <h4 class="M4"><span></span><a href="infor_center.php">消息中心</a></h4>
-        </li>
-        
-		<li>
-          <h4  class="M6"><span></span><a href="history_data.php">历史数据</a></h4>
-       </li>
-        
-		<li>
-          <h4   class="M10" style="background-color: #0075B0;"><span></span><a href="user_setting.php">用户设置</a></h4>
-        </li>
-      </ul>
-	</div>
-	
-	<div class="m-right">
-		<div class="right-nav">
-			<h2>用户设置</h2>
+				<li><a href="quit_handle.php">退出</a></li>
+			</ul>
 		</div>
-	   <div class="main">	
-	   	
-	   	 <div class="account-box main-mod" style="margin-bottom: 30px;">
-	   	 	<h2 style="font-weight:bold;">账户信息</h2>
-	   	 	<p style="padding-top: 20px;">注册账号：<?php echo $email?></p>
-	   	 	<p>账号ID：<?php echo $userid_format?></p>
-	   	 	<p>电话：<?php echo $telephone?></p>
-	   	 	<p>主管理员姓名：<?php echo $username?></p>
-	   	 </div>
-	   	 <div class="safe-info">
-	   	 	<h2 style="font-weight:bold;">账户管理</h2>
-
-	   	 	
-	   	 	<form class="revise-password">
-	   	 		<button class="revisepass-but">修改密码</button>
-	   	 		<button class="revisepass-but">添加管理员</button>
-	   	 		<button class="revisepass-but">设置自动关闭阀门</button>
-	   	 	</form>
-	   	 </div>
-	   </div>
-	   
 	</div>
-</div>
-<div class="bottom"></div>
-<div id="footer"><p>Copyright©  2017 版权所有 沈阳航空航天大学自动化学院 </a></p></div>
-<script>navList(12);</script>
+
+	<div id="content">
+		<div class="left_menu">
+			<ul id="nav_dot">
+				<li>
+					<h4 class="M1">
+						<span></span><a href="general_view.php">用户总览</a>
+					</h4>
+				</li>
+
+				<li>
+					<h4 class="M2">
+						<span></span><a href="temperature_monitor.php">温度监控</a>
+					</h4>
+				</li>
+
+				<li>
+					<h4 class="M3">
+						<span></span><a href="valve_control.php">阀门管理</a>
+					</h4>
+				</li>
+
+				<li>
+					<h4 class="M4">
+						<span></span><a href="infor_center.php">消息中心</a>
+					</h4>
+				</li>
+
+				<li>
+					<h4 class="M6">
+						<span></span><a href="history_data.php">历史数据</a>
+					</h4>
+				</li>
+
+				<li>
+					<h4 class="M10" style="background-color: #0075B0;">
+						<span></span><a href="user_setting.php">用户设置</a>
+					</h4>
+				</li>
+			</ul>
+		</div>
+
+		<div class="m-right">
+			<div class="right-nav">
+				<h2>用户设置</h2>
+			</div>
+			<div class="main">
+
+				<div class="account-box main-mod" style="margin-bottom: 30px;">
+					<h2 style="font-weight: bold;">账户信息</h2>
+					<p style="padding-top: 20px;">注册账号：<?php echo $email?></p>
+					<p>账号ID：<?php echo $userid_format?></p>
+					<p>电话：<?php echo $telephone?></p>
+					<p>主管理员姓名：<?php echo $username?></p>
+				</div>
+				<div class="safe-info">
+					<h2 style="font-weight: bold;">账户管理</h2>
+
+
+					<form class="revise-password">
+						<button class="revisepass-but">修改密码</button>
+						<button class="revisepass-but">添加管理员</button>
+						<button class="revisepass-but">设置自动关闭阀门</button>
+					</form>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="bottom"></div>
+	<div id="footer">
+		<p>
+			Copyright© 2017 版权所有 沈阳航空航天大学自动化学院
+		</p>
+	</div>
+	<script>navList(12);</script>
 </body>
 </html>
 

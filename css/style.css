@@ -84,8 +84,9 @@ body {
 .navigation ul li a {
 	color:#fff;
 }
+
 .navigation ul li a:hover {
-	color:#32323a;
+	color:#f00;
 }
 #footer {
 	height:50px;
