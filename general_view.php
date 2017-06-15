@@ -8,9 +8,28 @@
 	
 	$username = $_SESSION ['username'];
 	$userid = $_SESSION['userid'];
-	$sql = "select online from valvesystem,user where user.userid=1 and user.sysid=valvesystem.sysid";      //联结  根据用户ID查询对应系统是否在线
+	
+	//联结  根据用户ID查询对应系统
+	$sql = "select user.sysid ,online from valvesystem,user where user.userid=$userid and user.sysid=valvesystem.sysid";  
 	$query = mysqli_query ( $con, $sql );
-
+	
+	if ($query && mysqli_num_rows ( $query )) {
+		while ( ($row = mysqli_fetch_assoc ( $query )) !== null ) {
+			$_SESSION['sysid'] = $row['sysid'];   //将用户对应的系统id保存到session中
+			$sysid = $row['sysid'];              
+			$online  = $row['online'];           // 0 表示该用户阀门系统现在不在线，1表示在线   根据状况来决定显示元素样式
+		}
+	} 
+	//该用户系统下包含的阀门数
+	$sql = "select count(sysid) from valve where sysid= $sysid";     
+	$query = mysqli_query ( $con, $sql );
+	
+	if ($query && mysqli_num_rows ( $query )) {
+		while ( ($row = mysqli_fetch_array ($query,2)) !== null ) {
+			$valve_count  = $row[0];        
+		}
+	}
+	
 ?>
 <!DOCTYPE>
 <html>
@@ -152,6 +171,7 @@ strong {
 	vertical-align: middle;
 }
 
+/*正常异常*/
 .circleProgress_wrapper p {
 	line-height: 40px;
 	font-size: 40px;
@@ -182,8 +202,8 @@ strong {
 }
 
 .rightcircle {
-	border-top: 15px solid green;
-	border-right: 15px solid green;
+	/*border-top: 15px solid green;
+	border-right: 15px solid green;  */
 	right: 0;
 	-webkit-animation: circleProgressLoad_right 1.5s linear;
 	-webkit-animation-fill-mode: forwards;
@@ -193,8 +213,8 @@ strong {
 }
 
 .leftcircle {
-	border-bottom: 15px solid green;
-	border-left: 15px solid green;
+/*	border-bottom: 15px solid green;
+	border-left: 15px solid green; */
 	left: 0;
 	-webkit-animation: circleProgressLoad_left 1.5s linear;
 	/*将@keyframes规则绑定到选择器上，否则不会产生动画效果*/
@@ -260,6 +280,18 @@ strong {
 </style>
 
 <script>
+
+	$(document).ready(function(){
+		if(<?php echo $online?>){
+		    $(".rightcircle").css({"border-top": "15px solid green","border-right": "15px solid green"});
+		    $(".leftcircle").css({"border-bottom": "15px solid green","border-left": "15px solid green"});
+		 }
+		else{
+			$(".circleProgress_wrapper p ").css("color","red");
+			$(".rightcircle").css({"border-top": "15px solid red","border-right": "15px solid red"});
+		    $(".leftcircle").css({"border-bottom": "15px solid red","border-left": "15px solid red"});	
+		}
+	});
 	
 	function setTime(){
 		var dateObj = new Date();
@@ -284,7 +316,6 @@ strong {
    		if(minutes<10){
         	minutes = "0"+minutes;
     	}
-   		
    		
    		$("#year").html(year);
    		$("#mouth").html(month);
@@ -331,7 +362,7 @@ function weekday() {
 <body>
 	<div class="top"></div>
 	<div id="header">
-		<div class="logo">无线智能暖气水阀用户系统</div>
+		<div class="logo">室内无线智能温控平台</div>
 		<div class="navigation">
 			<ul>
 				<li>欢迎您！</li>
@@ -412,6 +443,7 @@ function weekday() {
 						</div>
 					</div>
 				</div>
+				
 				<!--second layer-->
 				<div class="general-descri">
 					<div class="general-descri-title">
@@ -420,11 +452,11 @@ function weekday() {
 
 					<div class="general-descri-content">
 						<!--圆形滚动条-->
-						<div class="circleProgress_wrapper">
+						<div class="circleProgress_wrapper" >
 							<div class="wrapper left">
-								<div class="circleProgress leftcircle"></div>
+								<div class="circleProgress leftcircle" ></div>
 								<div class="circleProgress_lefttext">
-									<p>正</p>
+									<p><?php if ($online) echo "正";else echo "异"?></p>
 								</div>
 							</div>
 
@@ -439,7 +471,8 @@ function weekday() {
 
 						<div class="general-descri-content-text">
 							<p>
-								您管理 <span id="valvecount">1</span> 个阀门，目前都处于正常运行中
+								您管理 <span id="valvecount">1</span> 个阀门，
+								<span ><?php if ($online) echo "目前都处于正常运行中";else echo "目前系统未在线"?></span>
 							</p>
 						</div>
 					</div>

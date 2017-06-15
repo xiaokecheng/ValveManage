@@ -110,7 +110,7 @@ $(function() {
 
 	<div class="top"></div>
 	<div id="header">
-		<div class="logo">无线智能暖气水阀用户系统</div>
+		<div class="logo">室内无线智能温控平台</div>
 		<div class="navigation">
 			<ul>
 				<li>欢迎您！</li>

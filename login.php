@@ -237,7 +237,7 @@ function GetXmlHttpObject()
 
 	<div
 		style="text-align: center; margin: 50px 0; padding-top: 30px; font: normal 14px/24px 'MicroSoft YaHei'; color: #000000; font-size: 17px;">
-		<h1>无线智能暖气水阀用户系统</h1>
+		<h1>室内无线智能温控平台</h1>
 	</div>
 </body>
 </html>

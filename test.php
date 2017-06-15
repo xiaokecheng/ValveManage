@@ -1,22 +1,30 @@
+<!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>
-</title>    
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		 <script src="js/jquery-1.12.0.min.js"></script>
+<link href="css/amazeui.css" rel="stylesheet" type="text/css" />
 
-<script>        
-function mini(txt) 
-{
-    document.getElementById('show_text').innerHTML = txt;
-    document.getElementById('xz').checked = true;
-}
-</script>
-</head>
+<link rel="stylesheet" href="css/amazeui.datetimepicker.css" />
+
+<script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="js/amazeui.min.js"></script>
+<script type="text/javascript" src="js/amazeui.datetimepicker.min.js"></script>
+
+		 
+	</head>
+	<body>
+	 <form action="" class="am-form" data-am-validator>
+  <p>
+  <input type="text" class="am-form-field" placeholder="日历组件" data-am-datepicker readonly required />
+  </p>
+  <p><button class="am-btn am-btn-primary">提交</button></p>
+</form>
 
 
-<body>    
-    <input type="checkbox" name="category" value="今日话题" onclick="mini('你好')"/>今日话题
-    <input type="checkbox" name="category" value="选中" id="xz"/>选中
-    <div id="show_text"> </div>
-</body>
+	</body>
+	
+
 </html>
+

@@ -7,9 +7,29 @@
 		echo "<script>window.location.href='login.php';</script>";
 	}
 	
+	if(!isset($_SESSION ["sysid"]))
+	{
+		echo "<script>window.location.href='general_view.php';</script>";
+	}
+	
 	$username = $_SESSION ['username'];
-	$sql = "select * from article order by createdatetime desc";
+	$userid = $_SESSION['userid'];
+	$sysid = $_SESSION['sysid'];
+	
+	
+	$sql = "select online from valvesystem where sysid=$sysid";
 	$query = mysqli_query ( $con, $sql );
+	$row = mysqli_fetch_assoc($query);
+	$valve_online = $row["online"];
+	
+	$sql = "select * from valve where sysid=$sysid ";
+	$query = mysqli_query ( $con, $sql );
+	if($query&&mysqli_num_rows($query))
+	{
+		while(($row = mysqli_fetch_assoc($query)) !== null){
+			$data[] = $row;
+		}
+	}
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
@@ -30,12 +50,138 @@
 <link href="css/amazeui.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="css/amazeui.datatables.min.css" />
 <link rel="stylesheet" href="css/amazeui.datatables.css" />
+<link rel="stylesheet" href="css/amazeui.datetimepicker.css" />
 <link type="text/css" rel="stylesheet" href="css/style.css" />
 
 <script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
 <script type="text/javascript" src="js/goal-thermometer.js"></script>
 <script type="text/javascript" src="js/amazeui.datatables.min.js"></script>
 <script type="text/javascript" src="js/amazeui.datatables.js"></script>
+<script type="text/javascript" src="js/amazeui.min.js"></script>
+<script type="text/javascript" src="js/amazeui.datetimepicker.min.js"></script>
+
+<style>
+
+#error-mess{
+	overflow: hidden;
+	background: #fff0f0;
+	text-align: left;
+	height: 30px;
+	width: 100%;
+	padding-top: 1px ;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	border: 1px solid #ffd2d2;
+	color: #b74d46;
+	font-size: 16px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	line-height: 30px;
+}
+
+#error-mess .error-icon{
+	display: inline-block;
+	background: url(https://passport.csdn.net/images/login-logic-icons.png) no-repeat 0 0;
+	width: 18px;
+	height: 18px;
+	vertical-align: middle;
+	margin: -4px 5px 0 5px;
+}
+
+.flow_query {
+    border-radius: 2px;
+    padding: 15px 20px 10px;
+	min-width:1000px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(215, 215, 215);
+    border-image: initial;
+    margin: 20px auto;
+}
+
+.flow_query h2{
+	font-weight:bold;
+}  
+
+.c_oneline{
+	margin:0 20px;
+	
+}
+
+//<!--时间选择器-->
+.am-form-field{
+	display:inline;
+	
+}
+
+.am-form select,
+.am-form textarea,
+.am-form input[type="text"],
+.am-form input[type="password"],
+.am-form input[type="datetime"],
+.am-form input[type="datetime-local"],
+.am-form input[type="date"],
+.am-form input[type="month"],
+.am-form input[type="time"],
+.am-form input[type="week"],
+.am-form input[type="number"],
+.am-form input[type="email"],
+.am-form input[type="url"],
+.am-form input[type="search"],
+.am-form input[type="tel"],
+.am-form input[type="color"],
+.am-form-field {
+	display: inline;
+	width:16%;
+}
+
+.date_descri{
+	
+}
+
+.flow_query form{
+	padding:10px;
+}
+
+.begin_date{
+	display: inline;
+	padding-right:10px;
+	margin-right:30px;
+}
+
+.end_date{
+	display: inline;
+	padding-right:10px;
+	margin-right:30px;
+}
+
+.result_dis{
+	display: inline;
+	padding-right:10px;
+	margin-right:30px;
+}
+
+.b_queryflow{
+	display: inline;
+}
+
+.b_queryflow button {
+    clear: both;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    background-color: #0e90d2;
+    border: 0;
+    margin: 5px 10px 5px 10px;
+    padding: 10px 15px;
+    color: #ffffff;
+    border-radius: 3px;
+    width: 100px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+</style>
 
 <script type="text/javascript">
 
@@ -43,7 +189,121 @@ $(function() {
     $('.am-table').DataTable();
 });
 
-//Ajax
+$('#begin_datetimepicker').datetimepicker({
+	  format: 'yyyy-mm-dd hh:ii'
+	});
+
+$('#end_datetimepicker').datetimepicker({
+	  format: 'yyyy-mm-dd hh:ii'
+	});
+
+function conEditMes(valveid){
+	if(!<?php echo $valve_online?>){
+		alert("当前系统不在线，暂不可编辑操作");
+		return;
+	}
+	
+	var id = valveid.toString();
+	alert("编辑ID为 "+id+" 的阀门，该功能尚未开启");
+}
+
+function conOpenMes(valveid,valvename,status){
+
+	if(!<?php echo $valve_online?>){
+		alert("当前系统不在线，暂不可打开操作");
+		return;
+	}
+
+	if(status){
+		alert("该阀门已经打开");
+		return ;
+	}
+
+	 if (confirm("你确认要打开  "+ valvename +"  么")) {
+		 changeValveStatus(valveid, status);
+     }
+     else {
+         
+     }
+}
+
+function conCloseMes(valveid,valvename,status){
+
+	if(!<?php echo $valve_online?>){
+		alert("当前系统不在线，暂不可关闭操作");
+		return;
+	}
+
+	 if(!status){
+		alert("该阀门已经关闭");
+		return;
+	 }
+	 
+	 if (confirm("你确认要关闭  "+ valvename +"  么")) {
+		 changeValveStatus(valveid, status);
+   }
+   else {
+       
+   }
+}
+
+//Ajax   参数依次为：被操作的阀门ID，该阀门现在的状态
+function changeValveStatus(valveid, status )
+{
+	var xmlHttp=GetXmlHttpObject();
+	if (xmlHttp==null)
+	 {
+		alert ("Browser does not support HTTP Request");
+		 return false;
+	 }
+
+	xmlHttp.onreadystatechange=function()
+	{
+		if (xmlHttp.readyState==4 && xmlHttp.status==200)
+		  {
+			var result=xmlHttp.responseText;
+			 if(result == "success"){
+				 alert("阀门打开成功");    
+				 window.location.href="valve_control.php";
+			 } 
+			 else 
+			 {
+				 alert("阀门打开失败，请重试");    
+			 }
+		  }   
+	}
+
+	var url="valve_control_handle.php";
+	url=url+"?valveid="+valveid;
+	url=url+"&status="+status;
+	url=url+"&sid="+Math.random();
+	xmlHttp.open("GET",url,true);
+	xmlHttp.send(null);
+}
+	
+function GetXmlHttpObject()
+{
+	var xmlHttp=null;
+	try
+	 {
+		// Firefox, Opera 8.0+, Safari
+	 	xmlHttp=new XMLHttpRequest();
+	 }
+	catch (e)
+	{
+	 		//Internet Explorer
+	 	try
+	 	{
+	 		 xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+	  	}
+	 	catch (e)
+	 	{
+	 		xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+	 	}
+	}
+	 return xmlHttp;
+}
+
 
 </script>
 
@@ -52,7 +312,7 @@ $(function() {
 
 	<div class="top"></div>
 	<div id="header">
-		<div class="logo">无线智能暖气水阀用户系统</div>
+		<div class="logo">室内无线智能温控平台</div>
 		<div class="navigation">
 			<ul>
 				<li>欢迎您！</li>
@@ -110,7 +370,11 @@ $(function() {
 			</div>
 
 			<div class="main">
-
+				
+				<div id="error-mess" style="display:<?php if ($valve_online) echo "none"?> ">
+						<span class="error-icon"></span> <span id="error-message">当前系统不在线</span>
+				</div>
+				
 				<div class="thermometer-select">
 					<!--  <form class="am-form">  -->
 					<table class="am-table am-table-striped am-table-hover">
@@ -129,152 +393,81 @@ $(function() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+							
+							 <?php 
+							 	if(empty($data)){
+							 		echo "当前用户未添加阀门，请联系管理员";
+							 	}else{
+							 		$index =1;
+							 		foreach($data as $value){
+							 ?>
+							 <tr>
 									<!--	<td><input type="checkbox" name="1" id="1" value="true" /></td>  -->
-									<td>1</td>
-									<td>实验室1号阀门</td>
-									<td>开</td>
-									<td>2017-05-19 09:23:10</td>
-									<td>49℃</td>
-									<td>8℃</td>
+									<td><?php echo $index++?></td>
+									<td><?php echo $value['valvename']?></td>
+									<td id="<?php echo "valveid_".$value['valveid']?>"><?php if ($value['status']) echo "开启";else echo "关闭"?></td>
+									<td><?php echo $value['createtime']?></td>
+									<td><?php echo $value['maxtemp_threshold']?>℃</td>
+									<td><?php echo $value['mintemp_threshold']?>℃</td>
 									<td>
 										<div class="am-btn-toolbar">
 											<div class="am-btn-group am-btn-group-xs">
 												<button
-													class="am-btn am-btn-default am-btn-xs am-text-secondary">
+													class="am-btn am-btn-default am-btn-xs am-text-secondary"  onclick="conEditMes('<?php echo $value['valveid']?>')">
 													<span></span>编辑
 												</button>
 												<button
-													class="am-btn am-btn-default am-btn-xs am-hide-sm-only">
+													class="am-btn am-btn-default am-btn-xs am-hide-sm-only"  onclick="conOpenMes('<?php echo $value['valveid']?>','<?php echo $value['valvename']?>',<?php echo $value['status']?>)">
 													<span></span> 打开
 												</button>
 												<button
-													class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+													class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"  onclick="conCloseMes('<?php echo $value['valveid']?>','<?php echo $value['valvename']?>',<?php echo $value['status']?>)" >
 													<span></span> 关闭
 												</button>
 											</div>
 										</div>
 									</td>
-									<td></td>
-								</tr>
-								<tr>
-									<!--	<td><input type="checkbox" name="2" id="2" value="true" /></td> -->
-									<td>2</td>
-									<td>实验室2号阀门</td>
-									<td>关</td>
-									<td>2017-05-19 09:23:10</td>
-									<td>49℃</td>
-									<td>8℃</td>
-									<td>
-										<div class="am-btn-toolbar">
-											<div class="am-btn-group am-btn-group-xs">
-												<button
-													class="am-btn am-btn-default am-btn-xs am-text-secondary">
-													<span></span>编辑
-												</button>
-												<button
-													class="am-btn am-btn-default am-btn-xs am-hide-sm-only">
-													<span></span> 打开
-												</button>
-												<button
-													class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
-													<span></span> 关闭
-												</button>
-											</div>
-										</div>
-									</td>
-									<td>暂未开通</td>
-								</tr>
-								<tr>
-									<!--	<td><input type="checkbox" name="3" id="3" value="true" /></td>  -->
-									<td>3</td>
-									<td>实验室3号阀门</td>
-									<td>关</td>
-									<td>2017-05-19 09:23:10</td>
-									<td>49℃</td>
-									<td>8℃</td>
-									<td>
-										<div class="am-btn-toolbar">
-											<div class="am-btn-group am-btn-group-xs">
-												<button
-													class="am-btn am-btn-default am-btn-xs am-text-secondary">
-													<span></span>编辑
-												</button>
-												<button
-													class="am-btn am-btn-default am-btn-xs am-hide-sm-only">
-													<span></span> 打开
-												</button>
-												<button
-													class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
-													<span></span> 关闭
-												</button>
-											</div>
-										</div>
-									</td>
-									<td>暂未开通</td>
-								</tr>
-								<tr>
-									<!--	<td><input type="checkbox" name="4" id="4" value="true" /></td>  -->
-									<td>4</td>
-									<td>办公室1号阀门</td>
-									<td>关</td>
-									<td>2017-05-19 09:23:10</td>
-									<td>49℃</td>
-									<td>8℃</td>
-									<td>
-										<div class="am-btn-toolbar">
-											<div class="am-btn-group am-btn-group-xs">
-												<button
-													class="am-btn am-btn-default am-btn-xs am-text-secondary">
-													<span></span>编辑
-												</button>
-												<button
-													class="am-btn am-btn-default am-btn-xs am-hide-sm-only">
-													<span></span> 打开
-												</button>
-												<button
-													class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
-													<span></span> 关闭
-												</button>
-											</div>
-										</div>
-									</td>
-									<td>暂未开通</td>
-								</tr>
-								<tr>
-									<!--	<td><input type="checkbox" name="5" id="5" value="true" /></td>   -->
-									<td>5</td>
-									<td>办公室2号阀门</td>
-									<td>关</td>
-									<td>2017-05-19 09:23:10</td>
-									<td>49℃</td>
-									<td>8℃</td>
-									<td>
-										<div class="am-btn-toolbar">
-											<div class="am-btn-group am-btn-group-xs">
-												<button
-													class="am-btn am-btn-default am-btn-xs am-text-secondary">
-													<span></span>编辑
-												</button>
-												<button
-													class="am-btn am-btn-default am-btn-xs am-hide-sm-only">
-													<span></span> 打开
-												</button>
-												<button
-													class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
-													<span></span> 关闭
-												</button>
-											</div>
-										</div>
-									</td>
-									<td>暂未开通</td>
-								</tr>
+									<td><?php echo $value['ps']?></td>
+							</tr>
+							 <?php 
+							 								}
+							 		}
+							 ?>
+						
 							</tbody>
 						</form>
 					</table>
 					<!--	</form>  -->
+					
 				</div>
-
+				
+				<div class="flow_query">
+				 	<h2>用户水阀流量查询</h2>
+				 	
+				 	<div class="c_oneline">
+				 	<form >
+				 	  <div class="begin_date">
+				 	  		<span class="date_descri">开始时间： </span>
+				 	  		<input type="text" value="2017-06-15 11:05" id="begin_datetimepicker" class="am-form-field"  data-am-datepicker>
+				 	  </div>
+				 		
+				 	  <div class="end_date">
+				 	  		<span class="date_descri">终止时间： </span>
+				 	  		<input type="text" value="2017-06-15 11:05" id="end_datetimepicker" class="am-form-field" data-am-datepicker>
+				 	  </div>
+			 
+				 	  <div class="result_dis">
+				 	  		<span class="date_descri">查询显示： </span><input type="text" value="0 L" id="flow_result" class="am-form-field" readonly="readonly">
+				 	  </div>
+				 	  
+				 	   <div class="b_queryflow">
+							<button id="login-button" onclick="queryflow()">查询</button>
+					  </div>
+				 	  
+				 	</form>
+				   </div>
+				   
+				</div>
 			</div>
 
 		</div>
@@ -284,7 +477,6 @@ $(function() {
 	<div id="footer">
 		<p>Copyright© 2017 版权所有 沈阳航空航天大学自动化学院</p>
 	</div>
-	<script>navList(12);</script>
 
 </body>
 </html>

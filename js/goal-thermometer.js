@@ -51,7 +51,7 @@ var resolution2x = false;            //是否开启高像素
 
 //start once the page is loaded
 $( document ).ready(function() {
-	
+	//仅用作测试
 	$(".btn1").click(function(){
 	valve_currentAmount = 93.6;
 	indoor_currentAmount = 22.4;
@@ -174,10 +174,10 @@ function preload(arrayOfImages) {
 function checkIfAllImagesLoaded(){
 	imgsLoaded++;
 	if(imgsLoaded == arrayOfImages.length+2){
-		$(".goal-thermometer").fadeTo(1000, 1, function(){      //$(selector).fadeTo(speed,opacity,callback)
-			animateThermometer(valve_currentAmount,valve_mercuryId,valve_tooltipId);
-			animateThermometer(indoor_currentAmount,indoor_mercuryId,indoor_tooltipId);
-		});
+		$(".goal-thermometer").fadeTo(1000, 1, function(){  });   //$(selector).fadeTo(speed,opacity,callback)
+		animateThermometer(valve_currentAmount,valve_mercuryId,valve_tooltipId);  //这两个动画放到回调函数里面会被执行两次 
+		animateThermometer(indoor_currentAmount,indoor_mercuryId,indoor_tooltipId); //造成第一次温度数字不变化，直接显示指定数字
+		
 	}
 }
 
@@ -221,10 +221,12 @@ function animateThermometer(currentAmount,mercuryId,tooltipId){
 
 //format the numbers with $ and commas   //利用正则表达式格式化
 function commaSeparateNumber(val){
+	
 	//val = Math.round(val);         //取整
+	val = parseFloat(val);
 	val = val.toFixed(1);            //保留一位小数
     while (/(\d+)(\d{3})/.test(val.toString())){
-      val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
     }
     return numberPrefix + val + numberSuffix;
 }

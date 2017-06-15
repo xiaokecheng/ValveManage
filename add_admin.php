@@ -16,13 +16,13 @@
 	$telephone = $row ['telephone'];
 	$email = $row ['email'];
 
-	$userid_format = str_pad ( $userid, 6, '0', STR_PAD_LEFT );
+	$userid_format = str_pad ( $userid, 6, '0', STR_PAD_LEFT );   //账号ID形式：000001，共六位，左端补零
 ?>
 <!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>用户设置</title>
+<title>添加管理员</title>
 
 <link rel="icon" href="images\myicon.ico" />
 <link rel="shortcut icon" href="images\myicon.ico" />
@@ -49,20 +49,74 @@
 	font-weight: 700;
 }
 
+.right-nav h2{
+	padding-left: 0px;
+	margin-right:0px;
+}
+
+.first_class{
+	cursor: pointer;
+	padding-left: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 22px;
+    font-weight: 400;
+    margin-right: 5px; 
+    max-width: 70%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .account-box {
 	border-bottom: 1px solid rgb(215, 215, 215);
 }
 
-.revise-password {
-	padding-bottom: 80px;
-	border-bottom: 1px solid rgb(215, 215, 215);
+.modify input {
+    outline: 0;
+    border: 1px solid rgba(156, 156, 156, 0.4);
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 250px;
+    border-radius: 3px;
+    padding: 8px 15px;
+    margin: 0 10px 10px 10px;
+    display: block;
+    text-align: left;
+    font-size: 16px;
+    color: #000000;
+    -webkit-transition-duration: 0.25s;
+    transition-duration: 0.25s;
+    font-weight: 300;
 }
+
+form button {
+    clear: both;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    background-color: #0e90d2;
+    border: 0;
+    margin: 30px 10px 10px 30px;
+    padding: 10px 15px;
+    color: #ffffff;
+    border-radius: 3px;
+    width: 200px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.am-admin{
+	margin:0 auto;
+	width:500px;
+}
+
+.add_admin_form{
+	padding-bottom: 50px;
+    border-bottom: 1px solid rgb(215, 215, 215);
+}
+
 </style>
-
-<script type="text/javascript">
-
-
-</script>
 
 </head>
 
@@ -123,28 +177,30 @@
 
 		<div class="m-right">
 			<div class="right-nav">
-				<h2>用户设置</h2>
+				<a class="first_class" href="user_setting.php">用户设置</a>
+				<h2>>></h2>
+				<h2 >添加管理员</h2>
 			</div>
 			<div class="main">
 
-				<div class="account-box main-mod" style="margin-bottom: 30px;">
-					<h2 style="font-weight: bold;">账户信息</h2>
-					<p style="padding-top: 20px;">注册账号：<?php echo $email?></p>
-					<p>账号ID：<?php echo $userid_format?></p>
-					<p>电话：<?php echo $telephone?></p>
-					<p>主管理员姓名：<?php echo $username?></p>
-				</div>
-				<div class="safe-info">
-					<h2 style="font-weight: bold;">账户管理</h2>
+				<form class="add_admin_form">
+					<div class="modify">
+					
+						<span>用户名:</span><input  type="text" placeholder="" name="yonghuming">
+						<span>email:</span><input  type="text" placeholder="" name="email">
+						<span>电话:</span><input  type="text" placeholder="" name="dianhua">
+						<span>登录密码:</span><input  type="password" placeholder="" name="yonghumima">
+						<span>密码确认:</span><input  type="password" placeholder="" name="querenmima">
+					</div>
 
-					<form class="revise-password">
-						<button class="revisepass-but" type="button" onclick="window.location.href='modify_password.php'">修改密码</button>
-						<button class="revisepass-but" type="button" onclick="window.location.href='modify_user_info.php'">修改账户信息</button>
-						<button class="revisepass-but" type="button" onclick="window.location.href='add_admin.php'">添加管理员</button>
-						<button class="revisepass-but" type="button" onclick="window.location.href='add_valve.php'">添加阀门</button>
-						<button class="revisepass-but" type="button" onclick="alert('该功能暂未开启')">自动开关阀门</button>
-					</form>
-				</div>
+
+					<div class="save_modify">
+					<button id="login-button" onclick="checkuserinfo()">添加</button>
+					</div>
+					
+
+				</form>
+			
 			</div>
 
 		</div>
@@ -155,6 +211,7 @@
 			Copyright© 2017 版权所有 沈阳航空航天大学自动化学院
 		</p>
 	</div>
+	<script>navList(12);</script>
 </body>
 </html>
 

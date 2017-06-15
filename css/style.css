@@ -289,7 +289,7 @@ body {
 .thermometer-select{
 	margin: 10px auto;
 	min-width: 1000px;
-	padding: 15px 20px 10px;
+	padding: 15px 20px 0px;
 	border-radius: 2px;
     border-width: 1px;
     border-style: solid;
@@ -314,7 +314,7 @@ body {
 
 .valve-div{
 	border-radius: 2px;
-  padding: 20px;
+  padding: 10px 10px;
   border-width: 1px;
   border-style: solid;
   border-color: rgb(215, 215, 215);
@@ -327,7 +327,7 @@ body {
 .indoor-div{
   float: right;
   border-radius: 2px;
-  padding: 20px;
+  padding: 10px 10px;
   border-width: 1px;
   border-style: solid;
   border-color: rgb(215, 215, 215);
@@ -342,7 +342,7 @@ body {
 	border: 1px solid rgb(215,215,215);
 	width:150px;
 	margin: 0 auto;
-	padding: 20px 20px;
+	padding: 10px 20px;
 	background-color:#0e90d2;
 }
 
@@ -352,7 +352,10 @@ body {
 	border: 1px solid rgb(215,215,215);
 	width:150px;
 	margin: 0 auto;
-	padding: 20px 20px;
+	padding: 10px 20px;
 	background-color:#0e90d2;
 	
 }
+
+
+

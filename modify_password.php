@@ -22,7 +22,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>用户设置</title>
+<title>修改密码</title>
 
 <link rel="icon" href="images\myicon.ico" />
 <link rel="shortcut icon" href="images\myicon.ico" />
@@ -32,10 +32,24 @@
 <script type="text/javascript" src="js/menu.js"></script>
 
 <style>
-.main-mod p {
-	font-size: 14px;
-	padding-bottom: 20px;
-	padding-left: 10px;
+
+.right-nav h2{
+	padding-left: 0px;
+	margin-right:0px;
+}
+
+.first_class{
+	cursor: pointer;
+	padding-left: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 22px;
+    font-weight: 400;
+    margin-right: 5px; 
+    max-width: 70%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .revisepass-but {
@@ -53,16 +67,47 @@
 	border-bottom: 1px solid rgb(215, 215, 215);
 }
 
-.revise-password {
-	padding-bottom: 80px;
-	border-bottom: 1px solid rgb(215, 215, 215);
+
+.modify input {
+    outline: 0;
+    border: 1px solid rgba(156, 156, 156, 0.4);
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 250px;
+    border-radius: 3px;
+    padding: 8px 15px;
+    margin: 0 auto 10px auto;
+    display: block;
+    text-align: left;
+    font-size: 16px;
+    color: #000000;
+    -webkit-transition-duration: 0.25s;
+    transition-duration: 0.25s;
+    font-weight: 300;
 }
+
+form button {
+    clear: both;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    background-color: #0e90d2;
+    border: 0;
+    margin: 0 auto 10px auto;
+    padding: 10px 15px;
+    color: #ffffff;
+    border-radius: 3px;
+    width: 250px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.save_modify{
+	width:250px;
+	margin:40px auto 30px auto;
+}
+
 </style>
-
-<script type="text/javascript">
-
-
-</script>
 
 </head>
 
@@ -123,27 +168,32 @@
 
 		<div class="m-right">
 			<div class="right-nav">
-				<h2>用户设置</h2>
+				<a class="first_class" href="user_setting.php">用户设置</a>
+				<h2>>></h2>
+				<h2 class="second_class">修改密码</h2>
 			</div>
 			<div class="main">
-
+                   
 				<div class="account-box main-mod" style="margin-bottom: 30px;">
-					<h2 style="font-weight: bold;">账户信息</h2>
-					<p style="padding-top: 20px;">注册账号：<?php echo $email?></p>
-					<p>账号ID：<?php echo $userid_format?></p>
-					<p>电话：<?php echo $telephone?></p>
-					<p>主管理员姓名：<?php echo $username?></p>
-				</div>
-				<div class="safe-info">
-					<h2 style="font-weight: bold;">账户管理</h2>
+				
+					<form class="form">
+					<div class="modify">
+						<input id="old_psw" type="password" placeholder="原始密码" name="old_password">
+						<input id="new_psw" type="password" placeholder="新密码" name="new_password">
+						<input id="confirm_new_psw" type="password" placeholder="确认密码" name="confirm_password">
+					</div>
 
-					<form class="revise-password">
-						<button class="revisepass-but" type="button" onclick="window.location.href='modify_password.php'">修改密码</button>
-						<button class="revisepass-but" type="button" onclick="window.location.href='modify_user_info.php'">修改账户信息</button>
-						<button class="revisepass-but" type="button" onclick="window.location.href='add_admin.php'">添加管理员</button>
-						<button class="revisepass-but" type="button" onclick="window.location.href='add_valve.php'">添加阀门</button>
-						<button class="revisepass-but" type="button" onclick="alert('该功能暂未开启')">自动开关阀门</button>
-					</form>
+					<div id="error-mess" style="display: none">
+						<span class="error-icon"></span> <span id="error-message"></span>
+					</div>
+
+					<div class="save_modify">
+					<button id="login-button" onclick="checkuserinfo()">保存修改</button>
+					</div>
+					
+
+				</form>
+				
 				</div>
 			</div>
 
