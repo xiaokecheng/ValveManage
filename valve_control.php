@@ -52,6 +52,7 @@
 <link rel="stylesheet" href="css/amazeui.datatables.css" />
 <link rel="stylesheet" href="css/amazeui.datetimepicker.css" />
 <link type="text/css" rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/amazeui.chosen.css" />
 
 <script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
 <script type="text/javascript" src="js/goal-thermometer.js"></script>
@@ -59,6 +60,7 @@
 <script type="text/javascript" src="js/amazeui.datatables.js"></script>
 <script type="text/javascript" src="js/amazeui.min.js"></script>
 <script type="text/javascript" src="js/amazeui.datetimepicker.min.js"></script>
+<script type="text/javascript" src="js/amazeui.chosen.min.js"></script>
 
 <style>
 
@@ -89,7 +91,7 @@
 
 .flow_query {
     border-radius: 2px;
-    padding: 15px 20px 10px;
+    padding: 15px 10px 10px 20px;
 	min-width:1000px;
     border-width: 1px;
     border-style: solid;
@@ -103,7 +105,7 @@
 }  
 
 .c_oneline{
-	margin:0 20px;
+	margin:0 10px;
 	
 }
 
@@ -118,7 +120,7 @@
 .am-form input[type="text"],
 .am-form input[type="password"],
 .am-form input[type="datetime"],
-.am-form input[type="datetime-local"],
+.am-form input[type="datetime-local"],	
 .am-form input[type="date"],
 .am-form input[type="month"],
 .am-form input[type="time"],
@@ -131,7 +133,7 @@
 .am-form input[type="color"],
 .am-form-field {
 	display: inline;
-	width:16%;
+	width:15%;
 }
 
 .date_descri{
@@ -145,19 +147,19 @@
 .begin_date{
 	display: inline;
 	padding-right:10px;
-	margin-right:30px;
+	margin-right:3%;
 }
 
 .end_date{
 	display: inline;
 	padding-right:10px;
-	margin-right:30px;
+	margin-right:3%;
 }
 
 .result_dis{
 	display: inline;
 	padding-right:10px;
-	margin-right:30px;
+	margin-right:3%;
 }
 
 .b_queryflow{
@@ -185,16 +187,58 @@
 
 <script type="text/javascript">
 
+var startDate = new Date();
+var endDate = new Date();
+var temp=new Date();
+
 $(function() {
-    $('.am-table').DataTable();
-});
+	 $('.am-table').DataTable();
+	 
+   
+    var $alert = $('#my-alert');
+    
+    $('#begin_datetimepicker').datepicker().
+      on('changeDate.datepicker.amui', function(event) {
+    	  if (event.date.valueOf() > temp.valueOf()) {
+              $alert.find('p').text('开始日期应不大于今天！').end().show();
+            }  else{
+        if (event.date.valueOf() > endDate.valueOf()) {
+          $alert.find('p').text('开始日期应小于结束日期！').end().show();
+        } else {
+          $alert.hide();
+          $('#begin_datetimepicker').text($('#my-start').data('date'));
+        }
+            }
+        startDate = new Date(event.date);
+        $(this).datepicker('close');
+      });
+
+    
+    $('#end_datetimepicker').datepicker().
+      on('changeDate.datepicker.amui', function(event) {
+    	  if (event.date.valueOf() > temp.valueOf()) {
+              $alert.find('p').text('结束日期应不大于今天！').end().show();
+            }  else{
+        if (event.date.valueOf() < startDate.valueOf()) {
+          $alert.find('p').text('结束日期应大于开始日期！').end().show();
+        } else {
+          $alert.hide();
+         
+          $('end_datetimepicker').text($('#my-end').data('date'));
+        }
+            }
+        endDate = new Date(event.date);
+        $(this).datepicker('close');
+      });
+    
+  });
 
 $('#begin_datetimepicker').datetimepicker({
-	  format: 'yyyy-mm-dd hh:ii'
+	  format: 'yyyy-mm-dd'
 	});
 
 $('#end_datetimepicker').datetimepicker({
-	  format: 'yyyy-mm-dd hh:ii'
+	  format: 'yyyy-mm-dd'
 	});
 
 function conEditMes(valveid){
@@ -247,6 +291,93 @@ function conCloseMes(valveid,valvename,status){
    }
 }
 
+//水阀流量查询
+function flowquery(){
+
+	 var $alert = $('#my-alert');
+	 $('#flow_result').val("");           //结果赋值
+	 if (startDate.valueOf() > temp.valueOf()) {
+         $alert.find('p').text('开始日期应不大于今天！').end().show();
+         return ;
+       } 
+	 if (startDate.valueOf() > endDate.valueOf()) {
+         $alert.find('p').text('开始日期应不大于结束日期！').end().show();
+         return ;
+       } 
+
+	 if (endDate.valueOf() > temp.valueOf()) {
+         $alert.find('p').text('结束日期应不大于今天！').end().show();
+         return ;
+       } 
+     
+	//var starttime = formatDate(startDate);      //2017-06-15 形式
+	//var endtime = formatDate(endDate);
+
+	 var haoqi = endDate - startDate;
+	 var starttime= Date.parse(startDate);        //时间戳形式
+	 var endtime = Date.parse(endDate);
+	 var chazhi = endtime-starttime;
+	 var days1=Math.floor(chazhi/(24*3600*1000));
+	 var days2=Math.floor(haoqi/(24*3600*1000)); 
+	 
+	//alert("startDate:"+ starttime+"   endDate:"+endtime);
+	//QueryValveFlow(starttime,endtime);             //利用Ajax查询数据库，计算流量
+
+	  var result = days1*64.34;
+      result = result.toFixed(2);
+	  $('#flow_result').val(result+" T");           //结果赋值
+
+}
+
+function formatDate(date) {
+	  var d = new Date(date),
+	    month = '' + (d.getMonth() + 1),
+	    day = '' + d.getDate(),
+	    year = d.getFullYear();
+
+	  if (month.length < 2) month = '0' + month;
+	  if (day.length < 2) day = '0' + day;
+
+	  return [year, month, day].join('-');
+	}
+
+//Ajax   参数依次为：开始日期，结束日期
+function QueryValveFlow(startdate, enddate )
+{
+	var xmlHttp=GetXmlHttpObject();
+	if (xmlHttp==null)
+	 {
+		alert ("Browser does not support HTTP Request");
+		 return false;
+	 }
+
+	xmlHttp.onreadystatechange=function()
+	{
+		if (xmlHttp.readyState==4 && xmlHttp.status==200)
+		  {
+			var result=xmlHttp.responseText;
+			 if(result == "success"){
+				 alert("操作成功");    
+				 window.location.href="valve_control.php";
+			 } 
+			 else 
+			 {
+				 alert("操作失败，请重试");    
+			 }
+		  }   
+	}
+
+	var url="query_flow_handle.php";
+	//url=url+"?valveid="+valveid;     //下一步需要细化的东西，主阀门。在这先默认为1
+	url=url+"?startdate="+startdate;
+	url=url+"&enddate="+enddate;
+	url=url+"&sid="+Math.random();
+	xmlHttp.open("GET",url,true);
+	xmlHttp.send(null);
+}
+
+
+
 //Ajax   参数依次为：被操作的阀门ID，该阀门现在的状态
 function changeValveStatus(valveid, status )
 {
@@ -263,12 +394,12 @@ function changeValveStatus(valveid, status )
 		  {
 			var result=xmlHttp.responseText;
 			 if(result == "success"){
-				 alert("阀门打开成功");    
+				 alert("操作成功");    
 				 window.location.href="valve_control.php";
 			 } 
 			 else 
 			 {
-				 alert("阀门打开失败，请重试");    
+				 alert("操作失败，请重试");    
 			 }
 		  }   
 	}
@@ -304,6 +435,45 @@ function GetXmlHttpObject()
 	 return xmlHttp;
 }
 
+
+function selectchange(valveid,value){
+	//alert(valveid +"," +value);    // just for test
+	changeValveOpening(valveid,value);
+}
+
+//Ajax   参数依次为：被操作的阀门ID，该阀门现在的状态
+function changeValveOpening(valveid, value )
+{
+	var xmlHttp=GetXmlHttpObject();
+	if (xmlHttp==null)
+	 {
+		alert ("Browser does not support HTTP Request");
+		 return false;
+	 }
+
+	xmlHttp.onreadystatechange=function()
+	{
+		if (xmlHttp.readyState==4 && xmlHttp.status==200)
+		  {
+			var result=xmlHttp.responseText;
+			 if(result == "success"){
+				 alert("操作成功");    
+				 window.location.href="valve_control.php";
+			 } 
+			 else 
+			 {
+				 alert("操作失败，请重试");    
+			 }
+		  }   
+	}
+
+	var url="opening_set_handle.php";
+	url=url+"?valveid="+valveid;
+	url=url+"&openingvalue="+value;
+	url=url+"&sid="+Math.random();
+	xmlHttp.open("GET",url,true);
+	xmlHttp.send(null);
+}
 
 </script>
 
@@ -382,12 +552,13 @@ function GetXmlHttpObject()
 							<thead>
 								<tr>
 									<!--	<th> </th>   -->
-									<th>阀门ID</th>
+									<th>ID</th>
 									<th>名称</th>
 									<th>状态</th>
+									<th>开度</th>
 									<th>创建时间</th>
-									<th>最大温度阈值</th>
-									<th>最小温度阈值</th>
+									<th>最大阈值</th>
+									<th>最小阈值</th>
 									<th>操作</th>
 									<th>备注</th>
 								</tr>
@@ -406,6 +577,18 @@ function GetXmlHttpObject()
 									<td><?php echo $index++?></td>
 									<td><?php echo $value['valvename']?></td>
 									<td id="<?php echo "valveid_".$value['valveid']?>"><?php if ($value['status']) echo "开启";else echo "关闭"?></td>
+									<td>  
+									<select data-am-selected="{btnWidth:'100px',btnSize: 'sm'}" class="my_select_box" 
+									id="select_<?php echo $value['valveid']?>" 
+									onchange="selectchange(<?php echo $value['valveid']?>,this.value)"
+									<?php if (!$value['work']) echo "disabled='disabled'" ?>>
+ 										<option value="0" <?php  if($value['opendegree']==0) echo "selected" ?>  >0%</option>
+  										<option value="1"  <?php  if($value['opendegree']==1) echo "selected" ?> >20%</option>
+  										<option value="2"   <?php  if($value['opendegree']==2) echo "selected" ?>>50%</option>
+  										<option value="3"  <?php  if($value['opendegree']==3) echo "selected" ?> >80%</option>
+  										<option value="4"  <?php  if($value['opendegree']==4) echo "selected" ?> >100%</option>
+									</select>
+									</td>
 									<td><?php echo $value['createtime']?></td>
 									<td><?php echo $value['maxtemp_threshold']?>℃</td>
 									<td><?php echo $value['mintemp_threshold']?>℃</td>
@@ -444,28 +627,35 @@ function GetXmlHttpObject()
 				<div class="flow_query">
 				 	<h2>用户水阀流量查询</h2>
 				 	
+				 	
 				 	<div class="c_oneline">
 				 	<form >
-				 	  <div class="begin_date">
+				 	  <div class=" begin_date">
 				 	  		<span class="date_descri">开始时间： </span>
-				 	  		<input type="text" value="2017-06-15 11:05" id="begin_datetimepicker" class="am-form-field"  data-am-datepicker>
+				 	  		<input type="text" value="<?php echo date('Y-m-d')?>" id="begin_datetimepicker" class="am-form-field"  data-am-datepicker>
+				 	  		<i class="icon-th am-icon-calendar"></i>
 				 	  </div>
 				 		
-				 	  <div class="end_date">
+				 	  <div class="end_date">	
 				 	  		<span class="date_descri">终止时间： </span>
-				 	  		<input type="text" value="2017-06-15 11:05" id="end_datetimepicker" class="am-form-field" data-am-datepicker>
+				 	  		<input type="text" value="<?php echo date('Y-m-d')?>" id="end_datetimepicker" class="am-form-field" data-am-datepicker>
+				 	  		<i class="icon-th am-icon-calendar"></i>
 				 	  </div>
 			 
 				 	  <div class="result_dis">
-				 	  		<span class="date_descri">查询显示： </span><input type="text" value="0 L" id="flow_result" class="am-form-field" readonly="readonly">
+				 	  		<span class="date_descri">查询显示： </span><input type="text" value="" id="flow_result" class="am-form-field" readonly="readonly">
 				 	  </div>
 				 	  
 				 	   <div class="b_queryflow">
-							<button id="login-button" onclick="queryflow()">查询</button>
+							<button id="login-button" type="button" onclick="flowquery()">查询</button>
 					  </div>
 				 	  
 				 	</form>
 				   </div>
+				   
+				   	<div class="am-alert am-alert-danger" id="my-alert" style="display: none;margin-top:0;width:85%; padding-left:20px">
+ 						 <p>开始日期应小于结束日期！</p>
+					</div>
 				   
 				</div>
 			</div>

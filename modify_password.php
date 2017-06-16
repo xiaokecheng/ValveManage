@@ -32,6 +32,9 @@
 <script type="text/javascript" src="js/menu.js"></script>
 
 <style>
+a,a:hover, a:focus {
+    color: #000; 
+}
 
 .right-nav h2{
 	padding-left: 0px;

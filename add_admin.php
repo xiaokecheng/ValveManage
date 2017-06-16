@@ -32,6 +32,10 @@
 <script type="text/javascript" src="js/menu.js"></script>
 
 <style>
+a,a:hover, a:focus {
+    color: #000; 
+}
+
 .main-mod p {
 	font-size: 14px;
 	padding-bottom: 20px;
